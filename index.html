@@ -1,1 +1,120 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            max-width: 600px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+        .disclosure {
+            font-size: 12px;
+            color: #555;
+            text-align: left;
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Retirement Savings Calculator</h2>
+    
+    <label>Current Account Balance:</label>
+    <input type="number" id="balance" value="10000">
+    
+    <label>Monthly Savings ($):</label>
+    <input type="number" id="monthly" value="500">
+    
+    <label>Current Age:</label>
+    <input type="number" id="currentAge" value="30">
+    
+    <label>Retirement Age:</label>
+    <input type="number" id="retirementAge" value="65">
+    
+    <button onclick="updateChart()">Calculate</button>
+
+    <canvas id="retirementChart"></canvas>
+
+    <div class="disclosure">
+        <p><strong>Disclosures:</strong></p>
+        <p>The analysis provided by this tool is based solely on the information provided by you. All examples, if any, are hypothetical and for illustrative purposes and do not represent current or future performance...</p>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById("retirementChart").getContext("2d");
+    let retirementChart;
+
+    function calculateSavings(balance, monthly, years, rate) {
+        let total = balance;
+        for (let i = 0; i < years * 12; i++) {
+            total += monthly;
+            total *= (1 + (rate / 100) / 12);
+        }
+        return total.toFixed(2);
+    }
+
+    function updateChart() {
+        let balance = parseFloat(document.getElementById("balance").value);
+        let monthly = parseFloat(document.getElementById("monthly").value);
+        let currentAge = parseInt(document.getElementById("currentAge").value);
+        let retirementAge = parseInt(document.getElementById("retirementAge").value);
+        let years = retirementAge - currentAge;
+
+        let rates = [3, 4, 5, 6, 7, 8];
+        let savings = rates.map(rate => calculateSavings(balance, monthly, years, rate));
+
+        if (retirementChart) retirementChart.destroy();
+
+        retirementChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["3%", "4%", "5%", "6%", "7%", "8%"],
+                datasets: [{
+                    label: "Retirement Savings ($)",
+                    data: savings,
+                    backgroundColor: ["red", "blue", "brown", "yellow", "green", "purple"]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true },
+                    datalabels: {
+                        anchor: "end",
+                        align: "top",
+                        formatter: (value) => "$" + value
+                    }
+                }
+            }
+        });
+    }
+
+    updateChart();
+</script>
+
+</body>
+</html>
+
