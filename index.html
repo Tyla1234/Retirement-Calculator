@@ -148,4 +148,73 @@
                 datasets: [{
                     label: "Retirement Savings ($)",
                     data: savings,
-                    backgroundColor: ["#f0f9e8", "#ccebc5", "#a8ddb5", "#7bccc4
+                    backgroundColor: ["#f0f9e8", "#ccebc5", "#a8ddb5", "#7bccc4", "#43a2ca", "#0868ac"]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true },
+                    datalabels: {
+                        anchor: "end",
+                        align: "top",
+                        color: "black",
+                        font: { weight: "bold" },
+                        formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Interest Rate",
+                            font: { size: 14, weight: "bold" }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return "$" + value.toLocaleString();
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: "Retirement Savings ($)",
+                            font: { size: 14, weight: "bold" }
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    }
+
+    function exportPDF() {
+        const container = document.getElementById("capture");
+        container.style.paddingBottom = "30px";  // Extra space to prevent cutoff
+
+        html2canvas(container, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff"
+        }).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jspdf.jsPDF("p", "mm", "a4");
+            const imgWidth = 190;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            pdf.save("Retirement_Calculator.pdf");
+        });
+
+        container.style.paddingBottom = "0px";
+    }
+
+    updateChart();
+</script>
+
+</body>
+</html>
+
