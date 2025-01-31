@@ -74,6 +74,7 @@
         }
         canvas {
             margin-top: 20px;
+            max-width: 100%;
         }
     </style>
 </head>
@@ -165,10 +166,10 @@
                             font: { size: 14, weight: "bold" }
                         },
                         ticks: {
-                            maxRotation: 0, // Prevent label rotation
-                            autoSkip: false  // Ensure all labels are displayed
+                            maxRotation: 0,
+                            autoSkip: false
                         },
-                        padding: 20 // Extra padding to ensure space for labels
+                        padding: 20
                     },
                     y: {
                         beginAtZero: true,
@@ -176,14 +177,14 @@
                             callback: function(value) {
                                 return "$" + value.toLocaleString();
                             },
-                            maxTicksLimit: 6 // Limit the number of ticks to ensure visibility
+                            maxTicksLimit: 6
                         },
                         title: {
                             display: true,
                             text: "Retirement Savings ($)",
                             font: { size: 14, weight: "bold" }
                         },
-                        padding: 10 // Add padding to ensure space for data labels
+                        padding: 15
                     }
                 }
             },
@@ -202,10 +203,12 @@
         }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jspdf.jsPDF("p", "mm", "a4");
-            const imgWidth = 190;
+
+            // Adjust scaling for PDF export
+            const pageWidth = pdf.internal.pageSize.width;
+            const imgWidth = pageWidth - 20;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            // Add the image to the PDF
             pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
             pdf.save("Retirement_Calculator.pdf");
         });
@@ -216,4 +219,5 @@
 
 </body>
 </html>
+
 
