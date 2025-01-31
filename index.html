@@ -104,13 +104,10 @@
 
     <div class="button-group">
         <button class="calculate-btn" onclick="updateChart()">Calculate</button>
+        <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>
     </div>
 
     <canvas id="retirementChart"></canvas>
-
-    <div class="button-group">
-        <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>
-    </div>
 </div>
 
 <script>
@@ -179,7 +176,8 @@
                             display: true,
                             text: "Retirement Savings ($)",
                             font: { size: 14, weight: "bold" }
-                        }
+                        },
+                        padding: 10  // Add padding to ensure space for data labels
                     }
                 }
             },
@@ -188,7 +186,7 @@
     }
 
     function exportPDF() {
-        html2canvas(document.querySelector(".container")).then(canvas => {
+        html2canvas(document.querySelector(".container"), {scrollX: 0, scrollY: -window.scrollY}).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jspdf.jsPDF("p", "mm", "a4");
             const imgWidth = 190;
