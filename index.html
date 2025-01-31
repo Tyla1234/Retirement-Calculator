@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirement Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> <!-- Added for data labels -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,15 +25,6 @@
         }
         canvas {
             margin-top: 20px;
-        }
-        .disclosure {
-            font-size: 12px;
-            color: #555;
-            text-align: left;
-            margin-top: 20px;
-            padding: 10px;
-            border-top: 1px solid #ccc;
-            background-color: #f9f9f9;
         }
     </style>
 </head>
@@ -56,14 +48,10 @@
     <button onclick="updateChart()">Calculate</button>
 
     <canvas id="retirementChart"></canvas>
-
-    <div class="disclosure">
-        <p><strong>Disclosures:</strong></p>
-        <p>The analysis provided by this tool is based solely on the information provided by you. All examples, if any, are hypothetical and for illustrative purposes and do not represent current or future performance...</p>
-    </div>
 </div>
 
 <script>
+    // Get the chart context
     const ctx = document.getElementById("retirementChart").getContext("2d");
     let retirementChart;
 
@@ -86,6 +74,7 @@
         let rates = [3, 4, 5, 6, 7, 8];
         let savings = rates.map(rate => calculateSavings(balance, monthly, years, rate));
 
+        // Destroy old chart before creating a new one
         if (retirementChart) retirementChart.destroy();
 
         retirementChart = new Chart(ctx, {
@@ -105,16 +94,29 @@
                     datalabels: {
                         anchor: "end",
                         align: "top",
-                        formatter: (value) => "$" + value
+                        color: "black",
+                        font: { weight: "bold" },
+                        formatter: (value) => `$${Number(value).toLocaleString()}`
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return "$" + value.toLocaleString();
+                            }
+                        }
                     }
                 }
-            }
+            },
+            plugins: [ChartDataLabels] // Enable data labels
         });
     }
 
+    // Initialize chart on load
     updateChart();
 </script>
 
 </body>
 </html>
-
