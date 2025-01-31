@@ -163,21 +163,27 @@
                             display: true,
                             text: "Interest Rate",
                             font: { size: 14, weight: "bold" }
-                        }
+                        },
+                        ticks: {
+                            maxRotation: 0, // Prevent label rotation
+                            autoSkip: false  // Ensure all labels are displayed
+                        },
+                        padding: 20 // Extra padding to ensure space for labels
                     },
                     y: {
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
                                 return "$" + value.toLocaleString();
-                            }
+                            },
+                            maxTicksLimit: 6 // Limit the number of ticks to ensure visibility
                         },
                         title: {
                             display: true,
                             text: "Retirement Savings ($)",
                             font: { size: 14, weight: "bold" }
                         },
-                        padding: 10  // Add padding to ensure space for data labels
+                        padding: 10 // Add padding to ensure space for data labels
                     }
                 }
             },
@@ -186,11 +192,20 @@
     }
 
     function exportPDF() {
-        html2canvas(document.querySelector(".container"), {scrollX: 0, scrollY: -window.scrollY}).then(canvas => {
+        html2canvas(document.querySelector(".container"), {
+            scrollX: 0,
+            scrollY: -window.scrollY,
+            width: document.querySelector(".container").offsetWidth,
+            height: document.querySelector(".container").offsetHeight,
+            x: 0,
+            y: 0
+        }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jspdf.jsPDF("p", "mm", "a4");
             const imgWidth = 190;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            // Add the image to the PDF
             pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
             pdf.save("Retirement_Calculator.pdf");
         });
@@ -201,3 +216,4 @@
 
 </body>
 </html>
+
