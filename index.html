@@ -28,25 +28,25 @@
         }
         .input-group {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
+            margin-bottom: 10px;
         }
         .input-group label {
             font-weight: bold;
-            flex: 1;
+            width: 45%;
             text-align: left;
         }
         .input-group input {
-            flex: 1;
-            padding: 8px;
-            margin: 5px 0;
+            width: 50%;
+            padding: 10px;
+            font-size: 14px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 100%;
         }
         .button-group {
             display: flex;
             justify-content: center;
+            gap: 10px;
             margin-top: 15px;
         }
         .button-group button {
@@ -58,7 +58,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
-            margin: 5px;
+            width: 50%;
         }
         .calculate-btn {
             background-color: #007bff;
@@ -79,7 +79,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="capture">
     <h2>Retirement Savings Calculator</h2>
 
     <div class="input-group">
@@ -104,13 +104,10 @@
 
     <div class="button-group">
         <button class="calculate-btn" onclick="updateChart()">Calculate</button>
+        <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>
     </div>
 
     <canvas id="retirementChart"></canvas>
-
-    <div class="button-group">
-        <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>
-    </div>
 </div>
 
 <script>
@@ -188,7 +185,14 @@
     }
 
     function exportPDF() {
-        html2canvas(document.querySelector(".container")).then(canvas => {
+        const container = document.getElementById("capture");
+        container.style.paddingBottom = "20px";  // Fix cropping
+
+        html2canvas(container, {
+            scale: 2,  // High resolution
+            useCORS: true,
+            backgroundColor: "#ffffff"
+        }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jspdf.jsPDF("p", "mm", "a4");
             const imgWidth = 190;
@@ -196,6 +200,8 @@
             pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
             pdf.save("Retirement_Calculator.pdf");
         });
+
+        container.style.paddingBottom = "0px";  // Reset padding
     }
 
     updateChart();
