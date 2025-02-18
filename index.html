@@ -1,198 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retirement Calculator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            width: 90%;
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .input-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .input-group label {
-            font-weight: bold;
-            flex: 1;
-            text-align: left;
-        }
-        .input-group input {
-            flex: 1;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            font-size: 16px;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-        .button-group button {
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 5px;
-            flex: 1;
-            min-width: 120px;
-        }
-        .calculate-btn {
-            background-color: #007bff;
-        }
-        .calculate-btn:hover {
-            background-color: #0056b3;
-        }
-        .pdf-btn {
-            background-color: #5fa8d3;
-        }
-        .pdf-btn:hover {
-            background-color: #478ab7;
-        }
-        canvas {
-            margin-top: 20px;
-            max-width: 100%;
-        }
-        @media (max-width: 480px) {
-            .input-group {
-                flex-direction: column;
-            }
-            .input-group label, .input-group input {
-                flex: none;
-                width: 100%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retirement Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .input-group label {
+      font-weight: bold;
+      flex: 1;
+      text-align: left;
+    }
+    .input-group input {
+      flex: 1;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .button-group button {
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 5px;
+    }
+    .calculate-btn {
+      background-color: #007bff;
+    }
+    .calculate-btn:hover {
+      background-color: #0056b3;
+    }
+    .pdf-btn {
+      background-color: #5fa8d3;
+    }
+    .pdf-btn:hover {
+      background-color: #478ab7;
+    }
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
+  <div class="container">
     <h2>Retirement Savings Calculator</h2>
-
     <div class="input-group">
-        <label>Current Balance:</label>
-        <input type="number" id="balance" value="10000">
+      <label>Current Balance:</label>
+      <input type="number" id="balance" value="10000" min="0">
     </div>
-
     <div class="input-group">
-        <label>Monthly Savings ($):</label>
-        <input type="number" id="monthly" value="500">
+      <label>Monthly Savings ($):</label>
+      <input type="number" id="monthly" value="500" min="0">
     </div>
-
     <div class="input-group">
-        <label>Current Age:</label>
-        <input type="number" id="currentAge" value="30">
+      <label>Current Age:</label>
+      <input type="number" id="currentAge" value="30" min="0">
     </div>
-
     <div class="input-group">
-        <label>Retirement Age:</label>
-        <input type="number" id="retirementAge" value="65">
+      <label>Retirement Age:</label>
+      <input type="number" id="retirementAge" value="65" min="0">
     </div>
-
     <div class="button-group">
-        <button class="calculate-btn" onclick="updateChart()">Calculate</button>
-        <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>
+      <button class="calculate-btn" onclick="updateChart()">Calculate</button>
+      <button class="pdf-btn" onclick="exportPDF()">Download PDF</button>
     </div>
-
     <canvas id="retirementChart"></canvas>
-</div>
+  </div>
 
-<script>
+  <script>
     const ctx = document.getElementById("retirementChart").getContext("2d");
     let retirementChart;
 
     function futureValue(rate, periods, payment, presentValue) {
-        let total = presentValue;
-        for (let i = 0; i < periods; i++) {
-            total += payment;
-            total *= (1 + rate / 12);
-        }
-        return Math.round(total);
+      rate = rate / 12;  // Convert annual rate to monthly
+      periods = periods * 12;  // Convert years to months
+      
+      let total = presentValue + payment * periods;
+      total *= Math.pow(1 + rate, periods);
+      
+      return Math.round(total);
     }
 
     function updateChart() {
-        let balance = parseFloat(document.getElementById("balance").value);
-        let monthly = parseFloat(document.getElementById("monthly").value);
-        let currentAge = parseInt(document.getElementById("currentAge").value);
-        let retirementAge = parseInt(document.getElementById("retirementAge").value);
-        let years = retirementAge - currentAge;
+      let balance = Math.max(0, parseFloat(document.getElementById("balance").value));
+      let monthly = Math.max(0, parseFloat(document.getElementById("monthly").value));
+      let currentAge = Math.max(0, parseInt(document.getElementById("currentAge").value));
+      let retirementAge = Math.max(0, parseInt(document.getElementById("retirementAge").value));
+      let years = Math.max(0, retirementAge - currentAge);
+      let rates = [3, 4, 5, 6, 7, 8];
+      let savings = rates.map(rate => futureValue(rate, years, monthly, balance));
 
-        let rates = [3, 4, 5, 6, 7, 8];
-        let savings = rates.map(rate => futureValue(rate / 100, years * 12, monthly, balance));
+      if (retirementChart) retirementChart.destroy();
 
-        if (retirementChart) retirementChart.destroy();
-
-        retirementChart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["3%", "4%", "5%", "6%", "7%", "8%"],
-                datasets: [{
-                    label: "Retirement Savings ($)",
-                    data: savings,
-                    backgroundColor: ["#D13042", "#1F6C91", "#F95714", "#FCB103", "#4F4392", "#759C36"]
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        ticks: {
-                            callback: function(value) {
-                                return "$" + value.toLocaleString();
-                            }
-                        }
-                    }
-                }
+      retirementChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["3%", "4%", "5%", "6%", "7%", "8%"],
+          datasets: [{
+            label: "Retirement Savings ($)",
+            data: savings,
+            backgroundColor: ["#D13042", "#1F6C91", "#F95714", "#FCB103", "#4F4392", "#759C36"]
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true },
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              color: "black",
+              font: { weight: "bold" },
+              formatter: (value) => `$${value.toLocaleString()}`
             }
-        });
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Interest Rate",
+                font: { size: 14, weight: "bold" }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { callback: value => "$" + value.toLocaleString() },
+              title: {
+                display: true,
+                text: "Retirement Savings ($)",
+                font: { size: 14, weight: "bold" }
+              }
+            }
+          }
+        }
+      });
     }
 
     function exportPDF() {
-        // Adjust the canvas height to fit the content
-        const canvas = document.getElementById("retirementChart");
-        const originalHeight = canvas.height;
-        canvas.height = originalHeight + 50; // Add extra space to prevent cut-off
-
-        html2canvas(document.querySelector(".container")).then(canvas => {
-            const pdf = new jspdf.jsPDF();
-            pdf.addImage(canvas, "PNG", 10, 10, 190, 0);
-            pdf.save("Retirement_Calculator.pdf");
-
-            // Reset the canvas height to its original value
-            canvas.height = originalHeight;
-        });
+      html2canvas(document.querySelector(".container")).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jspdf.jsPDF("p", "mm", "a4");
+        pdf.addImage(imgData, "PNG", 10, 10, 180, 0);
+        pdf.save("Retirement_Calculator.pdf");
+      });
     }
 
     updateChart();
-</script>
-
+  </script>
 </body>
 </html>
 
