@@ -30,6 +30,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            align-items: center;
         }
         .input-group label {
             font-weight: bold;
@@ -38,11 +39,12 @@
         }
         .input-group input {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: 100%;
+            font-size: 16px;
         }
         .button-group {
             display: flex;
@@ -159,31 +161,23 @@
                 }]
             },
             options: {
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: true },
-                    datalabels: {
-                        anchor: "end",
-                        align: "top",
-                        color: "black",
-                        font: { weight: "bold" },
-                        formatter: (value) => `$${value.toLocaleString()}`
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return "$" + value.toLocaleString();
+                            }
+                        }
                     }
                 }
-            },
-            plugins: [ChartDataLabels]
+            }
         });
     }
 
     function exportPDF() {
         html2canvas(document.querySelector(".container")).then(canvas => {
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jspdf.jsPDF({
-                orientation: canvas.width > canvas.height ? "l" : "p",
-                unit: "mm",
-                format: [canvas.width * 0.2645, canvas.height * 0.2645]
-            });
-            pdf.addImage(imgData, "PNG", 10, 10, pdf.internal.pageSize.width - 20, 0);
+            const pdf = new jspdf.jsPDF();
+            pdf.addImage(canvas, "PNG", 10, 10, 190, 0);
             pdf.save("Retirement_Calculator.pdf");
         });
     }
