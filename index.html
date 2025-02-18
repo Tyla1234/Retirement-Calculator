@@ -169,38 +169,22 @@
                         font: { weight: "bold" },
                         formatter: (value) => `$${value.toLocaleString()}`
                     }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: "Interest Rate",
-                            font: { size: 14, weight: "bold" }
-                        },
-                        ticks: {
-                            maxRotation: 0,
-                            autoSkip: false
-                        },
-                        padding: 20
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return "$" + value.toLocaleString();
-                            },
-                            maxTicksLimit: 6
-                        },
-                        title: {
-                            display: true,
-                            text: "Retirement Savings ($)",
-                            font: { size: 14, weight: "bold" }
-                        },
-                        padding: 15
-                    }
                 }
             },
             plugins: [ChartDataLabels]
+        });
+    }
+
+    function exportPDF() {
+        html2canvas(document.querySelector(".container")).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jspdf.jsPDF({
+                orientation: canvas.width > canvas.height ? "l" : "p",
+                unit: "mm",
+                format: [canvas.width * 0.2645, canvas.height * 0.2645]
+            });
+            pdf.addImage(imgData, "PNG", 10, 10, pdf.internal.pageSize.width - 20, 0);
+            pdf.save("Retirement_Calculator.pdf");
         });
     }
 
