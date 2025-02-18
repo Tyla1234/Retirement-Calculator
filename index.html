@@ -175,10 +175,18 @@
     }
 
     function exportPDF() {
+        // Adjust the canvas height to fit the content
+        const canvas = document.getElementById("retirementChart");
+        const originalHeight = canvas.height;
+        canvas.height = originalHeight + 50; // Add extra space to prevent cut-off
+
         html2canvas(document.querySelector(".container")).then(canvas => {
             const pdf = new jspdf.jsPDF();
             pdf.addImage(canvas, "PNG", 10, 10, 190, 0);
             pdf.save("Retirement_Calculator.pdf");
+
+            // Reset the canvas height to its original value
+            canvas.height = originalHeight;
         });
     }
 
